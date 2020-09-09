@@ -10,9 +10,9 @@ void FlipSprite(float&, sf::Sprite&);
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Platform Game");
+    sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(800, 600), "Platform Game");
     sf::Event event;
-    window.setFramerateLimit(FPS);
+    window->setFramerateLimit(FPS);
     sf::Font font;
     font.loadFromFile("assets/fonts/PixelGameFont.ttf");
     sf::Text textFPS;
@@ -31,18 +31,18 @@ int main()
 
     float deltaTime{};
 
-    while(window.isOpen())
+    while(window->isOpen())
     {
         sf::Time time = clock.getElapsedTime();
 
         textFPS.setString(std::to_string((1.f / time.asSeconds())) + "FPS");
 
-        while (window.pollEvent(event))
+        while (window->pollEvent(event))
         {
             
             if(event.type == sf::Event::Closed)
             {
-                window.close();
+                window->close();
             }
             
         }
@@ -50,10 +50,9 @@ int main()
         //sprite.setScale(sf::Vector2(SPRITE_SCALE, SPRITE_SCALE));
         //sprite.setOrigin(0.f, 0.f);
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        /*if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
-            sprite.setPosition(sprite.getPosition() + (sf::Vector2(-1.f, 0.f) * MOVE_SPEED * deltaTime));
-            //sprite.move(sf::Vector2(-1.f, 0.f) * MOVE_SPEED * deltaTime);
+            sprite.move(sf::Vector2(-1.f, 0.f) * MOVE_SPEED * deltaTime);
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
@@ -66,7 +65,7 @@ int main()
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         {
             sprite.move(sf::Vector2(0.f, 1.f) * MOVE_SPEED * deltaTime);
-        }
+        }*/
 
         if(sf::Joystick::isConnected(0))
         {
@@ -86,10 +85,10 @@ int main()
         //sprite.move(sf::Vector2(-1.f, 0.f) * MOVE_SPEED); //left
         time = clock.restart();
         deltaTime = time.asMilliseconds();
-        window.clear();
-        window.draw(textFPS);
-        window.draw(sprite);
-        window.display();
+        window->clear();
+        window->draw(textFPS);
+        window->draw(sprite);
+        window->display();
     }
 
     return 0;

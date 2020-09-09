@@ -5,15 +5,17 @@
 class Character
 {
     private:
-        std::string spriteSheet;
+        const char* spriteSheet;
         sf::Texture texture;
         sf::Sprite* sprite;
         Vec2* spriteScale; 
         Vec2* transformScale;
         Vec2* position;
+        float moveSpeed;
     public:
-        Character(std::string, Vec2*, Vec2*, Vec2*);
+        Character(const char*, Vec2*, Vec2*, Vec2*, float);
         ~Character();
-        void InitSprite(std::string&, Vec2*&, Vec2*&, Vec2*&);
+        void InitSprite(const char*&, Vec2*&, Vec2*&, Vec2*&);
         sf::Sprite* GetSprite() const;
+        void Movement(float);
 };

@@ -1,4 +1,5 @@
 #include<iostream>
+#include<string.h>
 #include <SFML/Graphics.hpp>
 #include "Character.hh"
 
@@ -19,13 +20,6 @@ int main()
     sf::Text textFPS;
     textFPS.setFont(font);
     textFPS.setCharacterSize(14);
-    //textFPS.setColor(sf::Color::White);
-
-    /*sf::Texture texture;
-    texture.loadFromFile("assets/sprites/tiles.png");
-    sf::Sprite sprite(texture, sf::IntRect(SCALE_SS * 11, SCALE_SS * 15, SCALE_SS, SCALE_SS));
-    sprite.setScale(sf::Vector2(SPRITE_SCALE, SPRITE_SCALE));
-    sprite.setPosition(sf::Vector2(400.f, 300.f));*/
 
     Character* player
     {
@@ -33,7 +27,8 @@ int main()
         "assets/sprites/tiles.png", 
         new Vec2(SCALE_SS, SCALE_SS), 
         new Vec2(SPRITE_SCALE, SPRITE_SCALE), 
-        new Vec2(window->getSize().x / 2.f, window->getSize().y / 2.f))
+        new Vec2(window->getSize().x / 2.f, window->getSize().y / 2.f),
+        MOVE_SPEED)
     };
 
     sf::Clock clock;
@@ -77,7 +72,7 @@ int main()
             sprite.move(sf::Vector2(0.f, 1.f) * MOVE_SPEED * deltaTime);
         }*/
 
-        if(sf::Joystick::isConnected(0))
+        /*if(sf::Joystick::isConnected(0))
         {
             float x{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X)/100};
             float y{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y)/100};
@@ -90,7 +85,9 @@ int main()
             player->GetSprite()->move(axis * MOVE_SPEED * deltaTime);
 
             FlipSprite(x, *player->GetSprite());
-        }
+        }*/
+
+        player->Movement(deltaTime);
 
         //sprite.move(sf::Vector2(-1.f, 0.f) * MOVE_SPEED); //left
         time = clock.restart();

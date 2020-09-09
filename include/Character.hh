@@ -12,10 +12,11 @@ class Character
         Vec2* transformScale;
         Vec2* position;
         float moveSpeed;
+        void InitSprite();
+        void FlipSprite(float&);
     public:
         Character(const char*, Vec2*, Vec2*, Vec2*, float);
         ~Character();
-        void InitSprite(const char*&, Vec2*&, Vec2*&, Vec2*&);
         sf::Sprite* GetSprite() const;
         void Movement(float);
 };

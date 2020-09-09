@@ -71,22 +71,6 @@ int main()
         {
             sprite.move(sf::Vector2(0.f, 1.f) * MOVE_SPEED * deltaTime);
         }*/
-
-        /*if(sf::Joystick::isConnected(0))
-        {
-            float x{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X)/100};
-            float y{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y)/100};
-            
-            x = x > 0.2f ? 1 : x < -0.2f ? -1 : 0;
-            y = y > 0.2f ? 1 : y < -0.2f ? -1 : 0;
-            sf::Vector2 axis{sf::Vector2(x, y)};
-
-            //std::cout << x << std::endl;
-            player->GetSprite()->move(axis * MOVE_SPEED * deltaTime);
-
-            FlipSprite(x, *player->GetSprite());
-        }*/
-
         player->Movement(deltaTime);
 
         //sprite.move(sf::Vector2(-1.f, 0.f) * MOVE_SPEED); //left
@@ -101,7 +85,7 @@ int main()
     return 0;
 }
 
-void FlipSprite(float& x, sf::Sprite& sprite)
+/*void FlipSprite(float& x, sf::Sprite& sprite)
 {
     if(x > 0.f)
     {
@@ -113,4 +97,4 @@ void FlipSprite(float& x, sf::Sprite& sprite)
         sprite.setScale(-SPRITE_SCALE, SPRITE_SCALE);
         sprite.setOrigin(sprite.getGlobalBounds().width / SPRITE_SCALE, 0.f);
     }
-}
+}*/

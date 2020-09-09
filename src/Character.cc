@@ -9,17 +9,17 @@ Character::Character(const char* spriteSheet, Vec2* spriteScale, Vec2* transform
     this->position = position;
     this->moveSpeed = moveSpeed;
 
-    InitSprite(spriteSheet, spriteScale, transformScale, position);
+    InitSprite();
 }
 
 Character::~Character(){}
 
-void Character::InitSprite(const char*& spriteSheet, Vec2*& spriteScale, Vec2*& transformScale, Vec2*& position)
+void Character::InitSprite()
 {
     texture.loadFromFile(spriteSheet);
     sprite = new sf::Sprite(texture, sf::IntRect(spriteScale->x * 11, spriteScale->y * 15, spriteScale->x, spriteScale->y));
-    sprite->setScale(sf::Vector2(transformScale->x, transformScale->y));
-    sprite->setPosition(sf::Vector2(position->x, position->y));
+    sprite->setScale(transformScale->x, transformScale->y);
+    sprite->setPosition(position->x, position->y);
 }
 
 sf::Sprite* Character::GetSprite() const
@@ -30,16 +30,30 @@ sf::Sprite* Character::GetSprite() const
 void Character::Movement(float deltaTime)
 {
     if(sf::Joystick::isConnected(0))
-        {
-            float x{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X)/100};
-            float y{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y)/100};
-            
-            x = x > 0.2f ? 1 : x < -0.2f ? -1 : 0;
-            y = y > 0.2f ? 1 : y < -0.2f ? -1 : 0;
-            sf::Vector2 axis{sf::Vector2(x, y)};
+    {
+        float x{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X)/100};
+        float y{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y)/100};
+        
+        x = x > 0.2f ? 1 : x < -0.2f ? -1 : 0;
+        y = y > 0.2f ? 1 : y < -0.2f ? -1 : 0;
+        sf::Vector2 axis{sf::Vector2(x, y)};
 
-            sprite->move(axis * moveSpeed * deltaTime);
+        sprite->move(axis * moveSpeed * deltaTime);
 
-            //FlipSprite(x, *player->GetSprite());
-        }
+        FlipSprite(x);
+    }
+}
+
+void Character::FlipSprite(float& axisX)
+{
+    if(axisX > 0.f)
+    {
+        sprite->setScale(transformScale->x, transformScale->y);
+        sprite->setOrigin(0.f, 0.f);
+    }
+    if(axisX < 0.f)
+    {
+        sprite->setScale(-transformScale->x, transformScale->y);
+        sprite->setOrigin(sprite->getGlobalBounds().width / transformScale->x, 0.f);
+    }
 }

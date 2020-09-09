@@ -1,5 +1,6 @@
 #include<iostream>
 #include <SFML/Graphics.hpp>
+#include "Character.hh"
 
 #define SCALE_SS 16
 #define MOVE_SPEED 0.2f
@@ -20,11 +21,20 @@ int main()
     textFPS.setCharacterSize(14);
     //textFPS.setColor(sf::Color::White);
 
-    sf::Texture texture;
+    /*sf::Texture texture;
     texture.loadFromFile("assets/sprites/tiles.png");
     sf::Sprite sprite(texture, sf::IntRect(SCALE_SS * 11, SCALE_SS * 15, SCALE_SS, SCALE_SS));
     sprite.setScale(sf::Vector2(SPRITE_SCALE, SPRITE_SCALE));
-    sprite.setPosition(sf::Vector2(400.f, 300.f));
+    sprite.setPosition(sf::Vector2(400.f, 300.f));*/
+
+    Character* player
+    {
+        new Character(
+        "assets/sprites/tiles.png", 
+        new Vec2(SCALE_SS, SCALE_SS), 
+        new Vec2(SPRITE_SCALE, SPRITE_SCALE), 
+        new Vec2(window->getSize().x / 2.f, window->getSize().y / 2.f))
+    };
 
     sf::Clock clock;
     sf::Time time;
@@ -77,9 +87,9 @@ int main()
             sf::Vector2 axis{sf::Vector2(x, y)};
 
             //std::cout << x << std::endl;
-            sprite.move(axis * MOVE_SPEED * deltaTime);
+            player->GetSprite()->move(axis * MOVE_SPEED * deltaTime);
 
-            FlipSprite(x, sprite);
+            FlipSprite(x, *player->GetSprite());
         }
 
         //sprite.move(sf::Vector2(-1.f, 0.f) * MOVE_SPEED); //left
@@ -87,7 +97,7 @@ int main()
         deltaTime = time.asMilliseconds();
         window->clear();
         window->draw(textFPS);
-        window->draw(sprite);
+        window->draw(*player->GetSprite());
         window->display();
     }
 

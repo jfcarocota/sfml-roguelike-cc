@@ -2,16 +2,18 @@
 #include<math.h>
 #include <SFML/Graphics.hpp>
 #include "Character.hh"
+#include "Input.hh"
 
+#define GAME_NAME "Roguelike game"
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 600
 #define MOVE_SPEED 0.2f
 #define FPS 60
 #define SPRITE_SCALE 4.f
 
-void FlipSprite(float&, sf::Sprite&);
-
 int main()
 {
-    sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(800, 600), "Platform Game");
+    sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), GAME_NAME);
     sf::Event event;
     window->setFramerateLimit(FPS);
     sf::Font font;
@@ -36,13 +38,9 @@ int main()
 
     float deltaTime{};
 
-    Vec2* axis;
+    Input input;
 
-    /*unsigned int first{1};
-    unsigned int last{5};
-    unsigned int frame{first};
-    float delay{80};
-    float currentTime{};*/
+    Vec2* axis;
 
     while(window->isOpen())
     {
@@ -61,15 +59,8 @@ int main()
         }
 
         if(sf::Joystick::isConnected(0))
-        {
-            float x{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X)/100};
-            float y{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y)/100};
-            
-            x = x > 0.2f ? 1 : x < -0.2f ? -1 : 0;
-            y = y > 0.2f ? 1 : y < -0.2f ? -1 : 0;
-            axis = new Vec2(x, y);
-
-            player->Movement(deltaTime, axis);
+        {   
+            player->Movement(deltaTime, input.JoystickAxis());
         }
 
         
@@ -79,7 +70,7 @@ int main()
         window->draw(textFPS);
         window->draw(*player->GetSprite());
         window->display();
-        if(std::abs(axis->x) > 0 || std::abs(axis->y) > 0)
+        if(std::abs(input.JoystickAxis()->x) > 0 || std::abs(input.JoystickAxis()->y) > 0)
         {
             player->GetAnimation(1)->Play(deltaTime);
         }else

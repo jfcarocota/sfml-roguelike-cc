@@ -56,7 +56,7 @@ Animation* Character::GetAnimation(unsigned int index) const
     return *(animations + index);
 }
 
-void Character::Movement(float& deltaTime, Vec2*& axis)
+void Character::Movement(float& deltaTime, Vec2* axis)
 {
     if(sf::Joystick::isConnected(0))
     {

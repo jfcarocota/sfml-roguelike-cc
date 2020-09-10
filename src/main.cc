@@ -1,12 +1,11 @@
 #include<iostream>
-#include<string.h>
+#include<math.h>
 #include <SFML/Graphics.hpp>
 #include "Character.hh"
 
-#define SCALE_SS 16
 #define MOVE_SPEED 0.2f
 #define FPS 60
-#define SPRITE_SCALE 3.f
+#define SPRITE_SCALE 4.f
 
 void FlipSprite(float&, sf::Sprite&);
 
@@ -24,11 +23,12 @@ int main()
     Character* player
     {
         new Character(
-        "assets/sprites/tiles.png", 
-        new Vec2(SCALE_SS, SCALE_SS), 
+        "assets/sprites/tiles3.png", 
+        new Vec2(16, 16), 
         new Vec2(SPRITE_SCALE, SPRITE_SCALE), 
         new Vec2(window->getSize().x / 2.f, window->getSize().y / 2.f),
-        MOVE_SPEED)
+        MOVE_SPEED,
+        1, 5)
     };
 
     sf::Clock clock;
@@ -36,11 +36,17 @@ int main()
 
     float deltaTime{};
 
+    unsigned int first{1};
+    unsigned int last{5};
+    unsigned int frame{first};
+    float delay{80};
+    float currentTime{};
+
     while(window->isOpen())
     {
         sf::Time time = clock.getElapsedTime();
 
-        textFPS.setString(std::to_string((1.f / time.asSeconds())) + "FPS");
+        textFPS.setString(std::to_string(llround((1.f / time.asSeconds()))) + "FPS");
 
         while (window->pollEvent(event))
         {
@@ -52,49 +58,22 @@ int main()
             
         }
 
-        //sprite.setScale(sf::Vector2(SPRITE_SCALE, SPRITE_SCALE));
-        //sprite.setOrigin(0.f, 0.f);
-
-        /*if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        {
-            sprite.move(sf::Vector2(-1.f, 0.f) * MOVE_SPEED * deltaTime);
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        {
-            sprite.move(sf::Vector2(1.f, 0.f) * MOVE_SPEED * deltaTime);
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        {
-            sprite.move(sf::Vector2(0.f, -1.f) * MOVE_SPEED * deltaTime);
-        }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        {
-            sprite.move(sf::Vector2(0.f, 1.f) * MOVE_SPEED * deltaTime);
-        }*/
         player->Movement(deltaTime);
-
-        //sprite.move(sf::Vector2(-1.f, 0.f) * MOVE_SPEED); //left
         time = clock.restart();
         deltaTime = time.asMilliseconds();
         window->clear();
         window->draw(textFPS);
         window->draw(*player->GetSprite());
         window->display();
+
+        currentTime += deltaTime;
+        if(currentTime >= delay)
+        {
+            currentTime = 0.f;
+            frame = frame < last ? frame + 1 : first;
+            player->GetSprite()->setTextureRect(sf::IntRect(16 * frame, 16 * 5, 16, 16));
+        }
     }
 
     return 0;
 }
-
-/*void FlipSprite(float& x, sf::Sprite& sprite)
-{
-    if(x > 0.f)
-    {
-        sprite.setScale(SPRITE_SCALE, SPRITE_SCALE);
-        sprite.setOrigin(0.f, 0.f);
-    }
-    if(x < 0.f)
-    {
-        sprite.setScale(-SPRITE_SCALE, SPRITE_SCALE);
-        sprite.setOrigin(sprite.getGlobalBounds().width / SPRITE_SCALE, 0.f);
-    }
-}*/

@@ -12,12 +12,25 @@ Character::Character(const char* spriteSheet, Vec2* spriteScale, Vec2* transform
     InitSprite();
 }
 
+Character::Character(const char* spriteSheet, Vec2* spriteScale, Vec2* transformScale, Vec2* position, float moveSpeed, uint32_t col, uint32_t row)
+{
+    this->spriteSheet = spriteSheet;
+    this->spriteScale = spriteScale;
+    this->transformScale = transformScale;
+    this->position = position;
+    this->moveSpeed = moveSpeed;
+    this->col = col;
+    this->row = row;
+
+    InitSprite();
+}
+
 Character::~Character(){}
 
 void Character::InitSprite()
 {
     texture.loadFromFile(spriteSheet);
-    sprite = new sf::Sprite(texture, sf::IntRect(spriteScale->x * 11, spriteScale->y * 15, spriteScale->x, spriteScale->y));
+    sprite = new sf::Sprite(texture, sf::IntRect(spriteScale->x *col, spriteScale->y * row, spriteScale->x, spriteScale->y));
     sprite->setScale(transformScale->x, transformScale->y);
     sprite->setPosition(position->x, position->y);
 }
@@ -25,6 +38,11 @@ void Character::InitSprite()
 sf::Sprite* Character::GetSprite() const
 {
     return sprite;
+}
+
+sf::Texture Character::GetTexture() const
+{
+    return texture;
 }
 
 void Character::Movement(float deltaTime)

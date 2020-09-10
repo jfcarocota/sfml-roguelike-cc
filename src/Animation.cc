@@ -1,6 +1,6 @@
 #include "Animation.hh"
 
-Animation::Animation(unsigned int first, unsigned int last, float delay, sf::Sprite*& sprite, Vec2*& spriteScale)
+Animation::Animation(unsigned int first, unsigned int last, float delay, sf::Sprite*& sprite, Vec2*& spriteScale, unsigned int col, unsigned int row)
 {
     this->first = first;
     this->last = last;
@@ -8,6 +8,8 @@ Animation::Animation(unsigned int first, unsigned int last, float delay, sf::Spr
     this->sprite = sprite;
     this->spriteScale = spriteScale;
     this->frame = first;
+    this->col = col;
+    this->row = row;
 }
 
 Animation::~Animation(){}
@@ -22,8 +24,8 @@ void Animation::Play(float& deltaTime)
     if(currentTime >= delay)
     {
         currentTime = 0.f;
-        frame = frame < last ? frame + 1 : first;
-        sprite->setTextureRect(sf::IntRect(spriteScale->x * frame, spriteScale->y * 5, spriteScale->x, spriteScale->y));
+        col = col < last ? col + 1 : first;
+        sprite->setTextureRect(sf::IntRect(spriteScale->x * col, spriteScale->y * row, spriteScale->x, spriteScale->y));
     }
 }
 

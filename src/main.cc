@@ -66,16 +66,7 @@ int main()
         window->draw(*player->GetSprite());
         window->display();
 
-        player->GetAnimation()->Play(deltaTime);
-
-        //currentTime += deltaTime;
-
-        /*if(currentTime >= delay)
-        {
-            currentTime = 0.f;
-            frame = frame < last ? frame + 1 : first;
-            player->GetSprite()->setTextureRect(sf::IntRect(16 * frame, 16 * 5, 16, 16));
-        }*/
+        player->GetAnimation(1)->Play(deltaTime);
     }
 
     return 0;

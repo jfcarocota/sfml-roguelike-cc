@@ -14,7 +14,7 @@ class Character
         float moveSpeed;
         uint32_t col{1};
         uint32_t row{1};
-        Animation* animation;
+        Animation** animations;
 
         void InitSprite();
         void FlipSprite(float&);
@@ -25,5 +25,5 @@ class Character
         sf::Sprite* GetSprite() const;
         sf::Texture GetTexture() const;
         void Movement(float);
-        Animation* GetAnimation() const;
+        Animation* GetAnimation(unsigned int) const;
 };

@@ -34,7 +34,11 @@ void Character::InitSprite()
     sprite->setScale(transformScale->x, transformScale->y);
     sprite->setPosition(position->x, position->y);
 
-    animation = new Animation(1, 5, 80.f, sprite, spriteScale);
+    animations = new Animation*[2]
+    {
+        new Animation(1, 5, 80.f, sprite, spriteScale, 1, 5),
+        new Animation(1, 5, 80.f, sprite, spriteScale, 1, 6)
+    };
 }
 
 sf::Sprite* Character::GetSprite() const
@@ -47,9 +51,9 @@ sf::Texture Character::GetTexture() const
     return texture;
 }
 
-Animation* Character::GetAnimation() const
+Animation* Character::GetAnimation(unsigned int index) const
 {
-    return animation;
+    return *(animations + index);
 }
 
 void Character::Movement(float deltaTime)

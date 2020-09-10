@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include<iostream>
-#include "Animation.hh"
+#include "StateMachine.hh"
 
 class Character
 {

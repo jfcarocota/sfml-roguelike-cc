@@ -77,8 +77,6 @@ int main()
         {
             player->GetAnimation(0)->Play(deltaTime);
         }
-        
-        
     }
 
     return 0;

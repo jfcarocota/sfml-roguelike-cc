@@ -36,11 +36,11 @@ int main()
 
     float deltaTime{};
 
-    unsigned int first{1};
+    /*unsigned int first{1};
     unsigned int last{5};
     unsigned int frame{first};
     float delay{80};
-    float currentTime{};
+    float currentTime{};*/
 
     while(window->isOpen())
     {
@@ -66,13 +66,16 @@ int main()
         window->draw(*player->GetSprite());
         window->display();
 
-        currentTime += deltaTime;
-        if(currentTime >= delay)
+        player->GetAnimation()->Play(deltaTime);
+
+        //currentTime += deltaTime;
+
+        /*if(currentTime >= delay)
         {
             currentTime = 0.f;
             frame = frame < last ? frame + 1 : first;
             player->GetSprite()->setTextureRect(sf::IntRect(16 * frame, 16 * 5, 16, 16));
-        }
+        }*/
     }
 
     return 0;

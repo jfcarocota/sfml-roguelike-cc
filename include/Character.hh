@@ -24,6 +24,6 @@ class Character
         ~Character();
         sf::Sprite* GetSprite() const;
         sf::Texture GetTexture() const;
-        void Movement(float);
+        void Movement(float&, Vec2*&);
         Animation* GetAnimation(unsigned int) const;
 };

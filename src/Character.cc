@@ -56,20 +56,14 @@ Animation* Character::GetAnimation(unsigned int index) const
     return *(animations + index);
 }
 
-void Character::Movement(float deltaTime)
+void Character::Movement(float& deltaTime, Vec2*& axis)
 {
     if(sf::Joystick::isConnected(0))
     {
-        float x{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X)/100};
-        float y{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y)/100};
         
-        x = x > 0.2f ? 1 : x < -0.2f ? -1 : 0;
-        y = y > 0.2f ? 1 : y < -0.2f ? -1 : 0;
-        sf::Vector2 axis{sf::Vector2(x, y)};
+        sprite->move(sf::Vector2(axis->x, axis->y) * moveSpeed * deltaTime);
 
-        sprite->move(axis * moveSpeed * deltaTime);
-
-        FlipSprite(x);
+        FlipSprite(axis->x);
     }
 }
 

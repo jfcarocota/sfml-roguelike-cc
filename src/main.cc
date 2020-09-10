@@ -36,6 +36,8 @@ int main()
 
     float deltaTime{};
 
+    Vec2* axis;
+
     /*unsigned int first{1};
     unsigned int last{5};
     unsigned int frame{first};
@@ -58,15 +60,34 @@ int main()
             
         }
 
-        player->Movement(deltaTime);
+        if(sf::Joystick::isConnected(0))
+        {
+            float x{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::X)/100};
+            float y{sf::Joystick::getAxisPosition(0, sf::Joystick::Axis::Y)/100};
+            
+            x = x > 0.2f ? 1 : x < -0.2f ? -1 : 0;
+            y = y > 0.2f ? 1 : y < -0.2f ? -1 : 0;
+            axis = new Vec2(x, y);
+
+            player->Movement(deltaTime, axis);
+        }
+
+        
         time = clock.restart();
         deltaTime = time.asMilliseconds();
         window->clear();
         window->draw(textFPS);
         window->draw(*player->GetSprite());
         window->display();
-
-        player->GetAnimation(1)->Play(deltaTime);
+        if(std::abs(axis->x) > 0 || std::abs(axis->y) > 0)
+        {
+            player->GetAnimation(1)->Play(deltaTime);
+        }else
+        {
+            player->GetAnimation(0)->Play(deltaTime);
+        }
+        
+        
     }
 
     return 0;

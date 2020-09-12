@@ -21,19 +21,19 @@ struct Input
             float x{};
             float y{};
 
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right))
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
             {
                 x = 1;
             }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left))
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
             {
                 x = -1;
             }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up))
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
             {
                 y = 1;
             }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down))
+            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
             {
                 y = -1;
             }

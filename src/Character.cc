@@ -58,13 +58,10 @@ Animation* Character::GetAnimation(unsigned int index) const
 
 void Character::Movement(float& deltaTime, Vec2* axis)
 {
-    if(sf::Joystick::isConnected(0))
-    {
-        
-        sprite->move(sf::Vector2(axis->x, axis->y) * moveSpeed * deltaTime);
+     
+    sprite->move(sf::Vector2(axis->x, axis->y) * moveSpeed * deltaTime);
 
-        FlipSprite(axis->x);
-    }
+    FlipSprite(axis->x);
 }
 
 void Character::FlipSprite(float& axisX)

@@ -24,20 +24,21 @@ int main()
 
     //w = wall sprite
     //g = ground sprite
+    //a = ground sprite type 2
     char** maze
     {
         new char*[10]
         {
-            new char[12]{'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'},
-            new char[12]{'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[12]{'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'}
+            new char[13]{'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'},
+            new char[13]{'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[13]{'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g'},
+            new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g'},
+            new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'}
         }
     };
 
@@ -58,7 +59,7 @@ int main()
     //Maze logic
     for(int i{}; i < 10; i++)
     {
-        for(int j{}; j < 12; j++)
+        for(int j{}; j < 13; j++)
         {
             char& m = *(*(maze + i) + j);
             //std::cout << *(*(maze + i) + j) << "\t";
@@ -129,6 +130,11 @@ int main()
         {   
             player->Movement(deltaTime, input.JoystickAxis());
         }
+        else
+        {
+            player->Movement(deltaTime, input.KeyboardAxis());   
+        }
+        
 
         
         time = clock.restart();
@@ -146,13 +152,27 @@ int main()
         //window->draw(*groundSprite2);
         //window->draw(textFPS);
         window->display();
-        if(std::abs(input.JoystickAxis()->x) > 0 || std::abs(input.JoystickAxis()->y) > 0)
+        if(sf::Joystick::isConnected(0))
         {
-            player->GetAnimation(1)->Play(deltaTime);
-        }else
-        {
-            player->GetAnimation(0)->Play(deltaTime);
+            if(std::abs(input.JoystickAxis()->x) > 0 || std::abs(input.JoystickAxis()->y) > 0)
+            {
+                player->GetAnimation(1)->Play(deltaTime);
+            }else
+            {
+                player->GetAnimation(0)->Play(deltaTime);
+            }
         }
+        else
+        {
+            if(std::abs(input.KeyboardAxis()->x) > 0 || std::abs(input.KeyboardAxis()->y) > 0)
+            {
+                player->GetAnimation(1)->Play(deltaTime);
+            }else
+            {
+                player->GetAnimation(0)->Play(deltaTime);
+            }
+        }
+
     }
 
     return 0;

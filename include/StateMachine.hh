@@ -4,9 +4,9 @@
 class StateMachine
 {
     private:
-        std::vector<AnimationState*> states;
+        std::vector<AnimationState*>* states;
     public:
-        StateMachine(std::vector<AnimationState*>);
+        StateMachine(std::vector<AnimationState*>*);
         ~StateMachine();
         void Run(float&);
 };

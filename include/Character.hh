@@ -15,6 +15,7 @@ class Character
         uint32_t col{1};
         uint32_t row{1};
         Animation** animations;
+        StateMachine* stateMachine;
 
         void InitSprite();
         void FlipSprite(float&);
@@ -26,4 +27,6 @@ class Character
         sf::Texture GetTexture() const;
         void Movement(float&, Vec2*);
         Animation* GetAnimation(unsigned int) const;
+        StateMachine* GetStateMachine() const;
+        void SetStateMachine(StateMachine*);
 };

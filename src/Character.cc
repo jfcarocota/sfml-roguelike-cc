@@ -80,3 +80,13 @@ void Character::FlipSprite(float& axisX)
         sprite->setOrigin(sprite->getGlobalBounds().width / transformScale->x, 0.f);
     }
 }
+
+StateMachine* Character::GetStateMachine() const
+{
+    return stateMachine;
+}
+
+void Character::SetStateMachine(StateMachine* stateMachine)
+{
+    this->stateMachine = stateMachine;
+}

@@ -29,26 +29,30 @@ int main()
         new char*[10]
         {
             new char[12]{'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'},
+            new char[12]{'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
             new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
             new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g'},
             new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g'},
             new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'}
         }
     };
 
     sf::Texture* tilesTexture = new sf::Texture();
     tilesTexture->loadFromFile("assets/sprites/tiles2.png");
-    sf::Sprite* wallSprite = new sf::Sprite(*tilesTexture, sf::IntRect(32, 16, 32, 16));
+
+    sf::Sprite* wallSprite = new sf::Sprite(*tilesTexture, sf::IntRect(16, 16, 16, 16));
     wallSprite->setScale(SPRITE_SCALE, SPRITE_SCALE);
     //wallSprite->setPosition(0, 0);
-    sf::Sprite* groundSprite = new sf::Sprite(*tilesTexture, sf::IntRect(32, 64, 32, 16));
+    sf::Sprite* groundSprite = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 1, 16 * 4, 16, 16));
     groundSprite->setScale(SPRITE_SCALE, SPRITE_SCALE);
     //groundSprite->setPosition(0, 64);
+    sf::Sprite* groundSprite2 = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 2, 16 * 4, 16, 16));
+    groundSprite2->setScale(SPRITE_SCALE, SPRITE_SCALE);
+
     std::vector<sf::Sprite> mazeSprites;
 
     //Maze logic
@@ -56,19 +60,27 @@ int main()
     {
         for(int j{}; j < 12; j++)
         {
-            std::cout << *(*(maze + i) + j) << "\t";
-            if(*(*(maze + i) + j) == 'w')
+            char& m = *(*(maze + i) + j);
+            //std::cout << *(*(maze + i) + j) << "\t";
+            switch (m)
             {
+            case 'w':
                 mazeSprites.push_back(*wallSprite);
                 mazeSprites.back().setPosition(64 * j, 64 * i);
-            }
-            if(*(*(maze + i) + j) == 'g')
-            {
+                break;
+            case 'g':
                 mazeSprites.push_back(*groundSprite);
                 mazeSprites.back().setPosition(64 * j, 64 * i);
+                break;
+            case 'a':
+                mazeSprites.push_back(*groundSprite2);
+                mazeSprites.back().setPosition(64 * j, 64 * i);
+                break;
+            
+            default:
+                break;
             }
         }
-        std::cout << std::endl;
     }
 
     Character* player
@@ -131,7 +143,7 @@ int main()
         }
 
         window->draw(*player->GetSprite());
-
+        //window->draw(*groundSprite2);
         //window->draw(textFPS);
         window->display();
         if(std::abs(input.JoystickAxis()->x) > 0 || std::abs(input.JoystickAxis()->y) > 0)

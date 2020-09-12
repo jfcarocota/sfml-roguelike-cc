@@ -29,14 +29,14 @@ int main()
     {
         new char*[10]
         {
-            new char[13]{'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'},
+            new char[13]{'w', 'e', 'r', 'w', 't', 'r', 'w', 'e', 'r', 'w', 'e', 'r', 'w'},
             new char[13]{'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
             new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
             new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
             new char[13]{'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g'},
             new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
             new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g', 's', 'g', 'g'},
             new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'a', 'g', 'g', 'g'},
             new char[13]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'}
         }
@@ -44,15 +44,25 @@ int main()
 
     sf::Texture* tilesTexture = new sf::Texture();
     tilesTexture->loadFromFile("assets/sprites/tiles2.png");
-
+    //Walls
     sf::Sprite* wallSprite = new sf::Sprite(*tilesTexture, sf::IntRect(16, 16, 16, 16));
     wallSprite->setScale(SPRITE_SCALE, SPRITE_SCALE);
-    //wallSprite->setPosition(0, 0);
+    sf::Sprite* wallSprite2 = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 2, 16, 16, 16));
+    wallSprite2->setScale(SPRITE_SCALE, SPRITE_SCALE);
+    sf::Sprite* wallSprite3 = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 3, 16, 16, 16));
+    wallSprite3->setScale(SPRITE_SCALE, SPRITE_SCALE);
+    //Wall flags
+    sf::Sprite* wallSpriteRed = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 1, 16 * 2, 16, 16));
+    wallSpriteRed->setScale(SPRITE_SCALE, SPRITE_SCALE);
+
     sf::Sprite* groundSprite = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 1, 16 * 4, 16, 16));
     groundSprite->setScale(SPRITE_SCALE, SPRITE_SCALE);
     //groundSprite->setPosition(0, 64);
     sf::Sprite* groundSprite2 = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 2, 16 * 4, 16, 16));
     groundSprite2->setScale(SPRITE_SCALE, SPRITE_SCALE);
+
+    sf::Sprite* groundStairSprite = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 3, 16 * 6, 16, 16));
+    groundStairSprite->setScale(SPRITE_SCALE, SPRITE_SCALE);
 
     std::vector<sf::Sprite> mazeSprites;
 
@@ -69,12 +79,28 @@ int main()
                 mazeSprites.push_back(*wallSprite);
                 mazeSprites.back().setPosition(64 * j, 64 * i);
                 break;
+            case 'e':
+                mazeSprites.push_back(*wallSprite2);
+                mazeSprites.back().setPosition(64 * j, 64 * i);
+                break;
+            case 'r':
+                mazeSprites.push_back(*wallSprite3);
+                mazeSprites.back().setPosition(64 * j, 64 * i);
+                break;
+            case 't':
+            mazeSprites.push_back(*wallSpriteRed);
+            mazeSprites.back().setPosition(64 * j, 64 * i);
+                break;
             case 'g':
                 mazeSprites.push_back(*groundSprite);
                 mazeSprites.back().setPosition(64 * j, 64 * i);
                 break;
             case 'a':
                 mazeSprites.push_back(*groundSprite2);
+                mazeSprites.back().setPosition(64 * j, 64 * i);
+                break;
+            case 's':
+                mazeSprites.push_back(*groundStairSprite);
                 mazeSprites.back().setPosition(64 * j, 64 * i);
                 break;
             

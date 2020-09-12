@@ -28,25 +28,25 @@ int main()
     {
         new char*[10]
         {
-            new char[10]{'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'},
-            new char[10]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[10]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[10]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[10]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[10]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[10]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[10]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[10]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
-            new char[10]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'}
+            new char[12]{'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w', 'w'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'},
+            new char[12]{'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g'}
         }
     };
 
     sf::Texture* tilesTexture = new sf::Texture();
     tilesTexture->loadFromFile("assets/sprites/tiles2.png");
-    sf::Sprite* wallSprite = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 0, 16 * 1, 32, 16));
+    sf::Sprite* wallSprite = new sf::Sprite(*tilesTexture, sf::IntRect(32, 16, 32, 16));
     wallSprite->setScale(SPRITE_SCALE, SPRITE_SCALE);
     //wallSprite->setPosition(0, 0);
-    sf::Sprite* groundSprite = new sf::Sprite(*tilesTexture, sf::IntRect(32 * 0, 32 * 2, 32, 16));
+    sf::Sprite* groundSprite = new sf::Sprite(*tilesTexture, sf::IntRect(32, 64, 32, 16));
     groundSprite->setScale(SPRITE_SCALE, SPRITE_SCALE);
     //groundSprite->setPosition(0, 64);
     std::vector<sf::Sprite> mazeSprites;
@@ -54,7 +54,7 @@ int main()
     //Maze logic
     for(int i{}; i < 10; i++)
     {
-        for(int j{}; j < 10; j++)
+        for(int j{}; j < 12; j++)
         {
             std::cout << *(*(maze + i) + j) << "\t";
             if(*(*(maze + i) + j) == 'w')

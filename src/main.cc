@@ -1,6 +1,7 @@
 #include<iostream>
 #include<math.h>
 #include <SFML/Graphics.hpp>
+#include<box2d/box2d.h>
 #include "Character.hh"
 #include "Input.hh"
 
@@ -43,7 +44,7 @@ int main()
     };
 
     sf::Texture* tilesTexture = new sf::Texture();
-    tilesTexture->loadFromFile("assets/sprites/tiles2.png");
+    tilesTexture->loadFromFile("./assets/sprites/tiles2.png");
     //Walls
     sf::Sprite* wallSprite = new sf::Sprite(*tilesTexture, sf::IntRect(16, 16, 16, 16));
     wallSprite->setScale(SPRITE_SCALE, SPRITE_SCALE);
@@ -64,6 +65,56 @@ int main()
     sf::Sprite* groundStairSprite = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 3, 16 * 6, 16, 16));
     groundStairSprite->setScale(SPRITE_SCALE, SPRITE_SCALE);
 
+    sf::Sprite* spriteBox = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 2, 16 * 12, 16, 16));
+    spriteBox->setOrigin(sf::Vector2(16.f, 16.f)/2.f);
+    spriteBox->setScale(SPRITE_SCALE, SPRITE_SCALE);
+    spriteBox->setPosition(400, 450);
+
+    Character* player
+    {
+        new Character(
+        "./assets/sprites/tiles3.png", 
+        new Vec2(16, 16), 
+        new Vec2(SPRITE_SCALE, SPRITE_SCALE), 
+        new Vec2(window->getSize().x / 2.f, window->getSize().y / 2.f),
+        MOVE_SPEED,
+        1, 5)
+    };
+
+
+    //Rigidbody for box sprite and world physics
+    b2Vec2* gravity{new b2Vec2(0.f, 0.f)};
+    b2World* world{new b2World(*gravity)};
+
+    b2BodyDef boxDef;
+    boxDef.type = b2BodyType::b2_staticBody;
+    boxDef.position = b2Vec2(spriteBox->getPosition().x, spriteBox->getPosition().y);
+    b2Body* boxBody = world->CreateBody(&boxDef);
+    //colldier form
+    b2PolygonShape boxPolygonShape;
+    boxPolygonShape.SetAsBox(16, 16);
+    b2FixtureDef boxFixtureDef;
+    boxFixtureDef.shape = &boxPolygonShape;
+    boxFixtureDef.density = 1.f;
+    boxFixtureDef.friction = 0.3f;
+    boxFixtureDef.restitution = 0.f;
+    b2Fixture* boxFixture = boxBody->CreateFixture(&boxFixtureDef);
+
+    //Player physics
+    b2BodyDef playerDef;
+    playerDef.type = b2BodyType::b2_dynamicBody;
+    playerDef.position = b2Vec2(player->GetSprite()->getPosition().x, player->GetSprite()->getPosition().y);
+    b2Body* playerBody = world->CreateBody(&playerDef);
+    b2PolygonShape playerPolygonShape;
+    playerPolygonShape.SetAsBox(16, 16);
+    b2FixtureDef playerFixtureDef;
+    playerFixtureDef.shape = &playerPolygonShape;
+    playerFixtureDef.density = 1.f;
+    playerFixtureDef.friction = 0.3f;
+    playerFixtureDef.restitution = 0.f;
+    b2Fixture* playerFixture = playerBody->CreateFixture(&playerFixtureDef);
+
+
     std::vector<sf::Sprite> mazeSprites;
 
     //Maze logic
@@ -75,51 +126,40 @@ int main()
             //std::cout << *(*(maze + i) + j) << "\t";
             switch (m)
             {
-            case 'w':
-                mazeSprites.push_back(*wallSprite);
+                case 'w':
+                    mazeSprites.push_back(*wallSprite);
+                    mazeSprites.back().setPosition(64 * j, 64 * i);
+                    break;
+                case 'e':
+                    mazeSprites.push_back(*wallSprite2);
+                    mazeSprites.back().setPosition(64 * j, 64 * i);
+                    break;
+                case 'r':
+                    mazeSprites.push_back(*wallSprite3);
+                    mazeSprites.back().setPosition(64 * j, 64 * i);
+                    break;
+                case 't':
+                mazeSprites.push_back(*wallSpriteRed);
                 mazeSprites.back().setPosition(64 * j, 64 * i);
-                break;
-            case 'e':
-                mazeSprites.push_back(*wallSprite2);
-                mazeSprites.back().setPosition(64 * j, 64 * i);
-                break;
-            case 'r':
-                mazeSprites.push_back(*wallSprite3);
-                mazeSprites.back().setPosition(64 * j, 64 * i);
-                break;
-            case 't':
-            mazeSprites.push_back(*wallSpriteRed);
-            mazeSprites.back().setPosition(64 * j, 64 * i);
-                break;
-            case 'g':
-                mazeSprites.push_back(*groundSprite);
-                mazeSprites.back().setPosition(64 * j, 64 * i);
-                break;
-            case 'a':
-                mazeSprites.push_back(*groundSprite2);
-                mazeSprites.back().setPosition(64 * j, 64 * i);
-                break;
-            case 's':
-                mazeSprites.push_back(*groundStairSprite);
-                mazeSprites.back().setPosition(64 * j, 64 * i);
-                break;
-            
-            default:
-                break;
+                    break;
+                case 'g':
+                    mazeSprites.push_back(*groundSprite);
+                    mazeSprites.back().setPosition(64 * j, 64 * i);
+                    break;
+                case 'a':
+                    mazeSprites.push_back(*groundSprite2);
+                    mazeSprites.back().setPosition(64 * j, 64 * i);
+                    break;
+                case 's':
+                    mazeSprites.push_back(*groundStairSprite);
+                    mazeSprites.back().setPosition(64 * j, 64 * i);
+                    break;
+                
+                default:
+                    break;
             }
         }
     }
-
-    Character* player
-    {
-        new Character(
-        "assets/sprites/tiles3.png", 
-        new Vec2(16, 16), 
-        new Vec2(SPRITE_SCALE, SPRITE_SCALE), 
-        new Vec2(window->getSize().x / 2.f, window->getSize().y / 2.f),
-        MOVE_SPEED,
-        1, 5)
-    };
 
     /*player->SetStateMachine( new StateMachine(new std::vector<Animation*>*()
     {
@@ -142,6 +182,9 @@ int main()
 
         textFPS.setString(std::to_string(llround((1.f / time.asSeconds()))) + "FPS");
 
+        world->ClearForces();
+        world->Step(deltaTime, 8, 8);
+
         while (window->pollEvent(event))
         {
             
@@ -158,9 +201,11 @@ int main()
         }
         else
         {
-            player->Movement(deltaTime, input.KeyboardAxis());   
+            playerBody->SetLinearVelocity(b2Vec2(input.KeyboardAxis()->x * deltaTime * MOVE_SPEED, input.KeyboardAxis()->y * deltaTime * MOVE_SPEED));
+            //player->Movement(deltaTime, input.KeyboardAxis());   
         }
-        
+        spriteBox->setPosition(boxBody->GetPosition().x, boxBody->GetPosition().y);
+        player->GetSprite()->setPosition(playerBody->GetPosition().x, playerBody->GetPosition().y);        
 
         
         time = clock.restart();
@@ -173,6 +218,8 @@ int main()
         {
             window->draw(tile);
         }
+
+        window->draw(*spriteBox);
 
         window->draw(*player->GetSprite());
         //window->draw(*groundSprite2);

@@ -66,7 +66,7 @@ int main()
     groundStairSprite->setScale(SPRITE_SCALE, SPRITE_SCALE);
 
     sf::Sprite* spriteBox = new sf::Sprite(*tilesTexture, sf::IntRect(16 * 2, 16 * 12, 16, 16));
-    spriteBox->setOrigin(sf::Vector2(16.f, 16.f)/2.f);
+    spriteBox->setOrigin(sf::Vector2(0.f, 0.f));
     spriteBox->setScale(SPRITE_SCALE, SPRITE_SCALE);
     spriteBox->setPosition(400, 450);
 

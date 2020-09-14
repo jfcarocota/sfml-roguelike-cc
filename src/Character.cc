@@ -1,5 +1,6 @@
 #include<SFML/Graphics.hpp>
 #include<Character.hh>
+#include<box2d/box2d.h>
 
 Character::Character(const char* spriteSheet, Vec2* spriteScale, Vec2* transformScale, Vec2* position, float moveSpeed)
 {
@@ -56,11 +57,20 @@ Animation* Character::GetAnimation(unsigned int index) const
     return *(animations + index);
 }
 
-void Character::Movement(float& deltaTime, Vec2* axis)
+/*void Character::Movement(float& deltaTime, Vec2* axis)
 {
      
     sprite->move(sf::Vector2(axis->x, axis->y) * moveSpeed * deltaTime);
 
+    FlipSprite(axis->x);
+}*/
+
+void Character::Movement(float& deltaTime, Vec2* axis, b2Body*& body)
+{
+    //body->ApplyForce(b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed), body->GetWorldCenter(), true);
+    body->SetLinearVelocity(*(new b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed)));
+    //std::cout << body->GetLinearVelocity().x << std::endl;
+    //body->ApplyLinearImpulse(b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed), body->GetPosition(), true);
     FlipSprite(axis->x);
 }
 

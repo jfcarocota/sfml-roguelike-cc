@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include<iostream>
 #include "StateMachine.hh"
+#include<box2d/box2d.h>
 
 class Character
 {
@@ -25,7 +26,8 @@ class Character
         ~Character();
         sf::Sprite* GetSprite() const;
         sf::Texture GetTexture() const;
-        void Movement(float&, Vec2*);
+        //void Movement(float&, Vec2*);
+        void Movement(float&, Vec2*, b2Body*&);
         Animation* GetAnimation(unsigned int) const;
         StateMachine* GetStateMachine() const;
         void SetStateMachine(StateMachine*);

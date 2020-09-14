@@ -8,7 +8,7 @@
 #define GAME_NAME "Roguelike game"
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-#define MOVE_SPEED 0.2f
+#define MOVE_SPEED 5.2f
 #define FPS 60
 #define SPRITE_SCALE 4.f
 
@@ -92,7 +92,7 @@ int main()
     b2Body* boxBody = world->CreateBody(&boxDef);
     //colldier form
     b2PolygonShape boxPolygonShape;
-    boxPolygonShape.SetAsBox(16, 16);
+    boxPolygonShape.SetAsBox(31, 31);
     b2FixtureDef boxFixtureDef;
     boxFixtureDef.shape = &boxPolygonShape;
     boxFixtureDef.density = 1.f;
@@ -110,7 +110,7 @@ int main()
     b2FixtureDef playerFixtureDef;
     playerFixtureDef.shape = &playerPolygonShape;
     playerFixtureDef.density = 1.f;
-    playerFixtureDef.friction = 0.3f;
+    playerFixtureDef.friction = 0.f;
     playerFixtureDef.restitution = 0.f;
     b2Fixture* playerFixture = playerBody->CreateFixture(&playerFixtureDef);
 
@@ -197,12 +197,11 @@ int main()
 
         if(sf::Joystick::isConnected(0))
         {   
-            player->Movement(deltaTime, input.JoystickAxis());
+            player->Movement(deltaTime, input.JoystickAxis(), playerBody);
         }
         else
         {
-            playerBody->SetLinearVelocity(b2Vec2(input.KeyboardAxis()->x * deltaTime * MOVE_SPEED, input.KeyboardAxis()->y * deltaTime * MOVE_SPEED));
-            //player->Movement(deltaTime, input.KeyboardAxis());   
+            player->Movement(deltaTime, input.KeyboardAxis(), playerBody);
         }
         spriteBox->setPosition(boxBody->GetPosition().x, boxBody->GetPosition().y);
         player->GetSprite()->setPosition(playerBody->GetPosition().x, playerBody->GetPosition().y);        

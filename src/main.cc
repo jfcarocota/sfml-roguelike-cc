@@ -8,8 +8,8 @@
 #define GAME_NAME "Roguelike game"
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-#define MOVE_SPEED 0.2f
-#define FPS 60
+#define MOVE_SPEED 0.0012f
+#define FPS 120
 #define SPRITE_SCALE 4.f
 
 int main()
@@ -120,12 +120,12 @@ int main()
     sf::RectangleShape* playerCollider{new sf::RectangleShape(sf::Vector2f(16 * SPRITE_SCALE, 16 * SPRITE_SCALE))};
     playerCollider->setFillColor(sf::Color::Transparent);
     playerCollider->setOutlineColor(sf::Color::Magenta);
-    playerCollider->setOutlineThickness(1.f);
+    playerCollider->setOutlineThickness(2.f);
 
     sf::RectangleShape* boxCollider{new sf::RectangleShape(sf::Vector2f(16 * SPRITE_SCALE, 16 * SPRITE_SCALE))};
     boxCollider->setFillColor(sf::Color::Transparent);
     boxCollider->setOutlineColor(sf::Color::Magenta);
-    boxCollider->setOutlineThickness(1.f);
+    boxCollider->setOutlineThickness(2.f);
     boxCollider->setPosition(boxBody->GetWorldCenter().x, boxBody->GetWorldCenter().y);
 
     std::vector<sf::Sprite> mazeSprites;
@@ -196,7 +196,7 @@ int main()
         textFPS.setString(std::to_string(llround((1.f / time.asSeconds()))) + "FPS");
 
         world->ClearForces();
-        world->Step(1.f / time.asSeconds(), 16, 16);
+        world->Step(1.f / time.asSeconds(), 8, 8);
 
         while (window->pollEvent(event))
         {

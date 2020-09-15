@@ -71,7 +71,7 @@ void Character::Movement(float& deltaTime, Vec2* axis, b2Body*& body)
     //body->ApplyForce(b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed), body->GetWorldCenter(), true);
     body->SetLinearVelocity(*(new b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed)));
     //std::cout << body->GetLinearVelocity().x << std::endl;
-    //body->ApplyLinearImpulse(b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed), body->GetPosition(), true);
+    //body->ApplyLinearImpulse(b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed), body->GetWorldCenter(), true);
     FlipSprite(axis->x);
 }
 

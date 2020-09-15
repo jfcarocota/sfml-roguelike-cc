@@ -67,6 +67,7 @@ Animation* Character::GetAnimation(unsigned int index) const
 
 void Character::Movement(float& deltaTime, Vec2* axis, b2Body*& body)
 {
+    //body->SetTransform(body->GetPosition() + *(new b2Vec2(axis->x, axis->y)), 0.f);
     //body->ApplyForce(b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed), body->GetWorldCenter(), true);
     body->SetLinearVelocity(*(new b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed)));
     //std::cout << body->GetLinearVelocity().x << std::endl;

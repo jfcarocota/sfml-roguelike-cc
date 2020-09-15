@@ -8,7 +8,7 @@
 #define GAME_NAME "Roguelike game"
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-#define MOVE_SPEED 5.2f
+#define MOVE_SPEED 0.2f
 #define FPS 60
 #define SPRITE_SCALE 4.f
 
@@ -92,7 +92,7 @@ int main()
     b2Body* boxBody = world->CreateBody(&boxDef);
     //colldier form
     b2PolygonShape boxPolygonShape;
-    boxPolygonShape.SetAsBox(31, 31);
+    boxPolygonShape.SetAsBox(8 * SPRITE_SCALE, 8 * SPRITE_SCALE);
     b2FixtureDef boxFixtureDef;
     boxFixtureDef.shape = &boxPolygonShape;
     boxFixtureDef.density = 1.f;
@@ -106,7 +106,7 @@ int main()
     playerDef.position = b2Vec2(player->GetSprite()->getPosition().x, player->GetSprite()->getPosition().y);
     b2Body* playerBody = world->CreateBody(&playerDef);
     b2PolygonShape playerPolygonShape;
-    playerPolygonShape.SetAsBox(16, 16);
+    playerPolygonShape.SetAsBox(8 * SPRITE_SCALE, 8 * SPRITE_SCALE);
     b2FixtureDef playerFixtureDef;
     playerFixtureDef.shape = &playerPolygonShape;
     playerFixtureDef.density = 1.f;
@@ -114,6 +114,19 @@ int main()
     playerFixtureDef.restitution = 0.f;
     b2Fixture* playerFixture = playerBody->CreateFixture(&playerFixtureDef);
 
+    sf::CircleShape* playerCenter{new sf::CircleShape(2)};
+    playerCenter->setFillColor(sf::Color::Green);
+
+    sf::RectangleShape* playerCollider{new sf::RectangleShape(sf::Vector2f(16 * SPRITE_SCALE, 16 * SPRITE_SCALE))};
+    playerCollider->setFillColor(sf::Color::Transparent);
+    playerCollider->setOutlineColor(sf::Color::Magenta);
+    playerCollider->setOutlineThickness(1.f);
+
+    sf::RectangleShape* boxCollider{new sf::RectangleShape(sf::Vector2f(16 * SPRITE_SCALE, 16 * SPRITE_SCALE))};
+    boxCollider->setFillColor(sf::Color::Transparent);
+    boxCollider->setOutlineColor(sf::Color::Magenta);
+    boxCollider->setOutlineThickness(1.f);
+    boxCollider->setPosition(boxBody->GetWorldCenter().x, boxBody->GetWorldCenter().y);
 
     std::vector<sf::Sprite> mazeSprites;
 
@@ -128,19 +141,19 @@ int main()
             {
                 case 'w':
                     mazeSprites.push_back(*wallSprite);
-                    mazeSprites.back().setPosition(64 * j, 64 * i);
+                    mazeSprites.back().setPosition(16 * SPRITE_SCALE * j, 16 * SPRITE_SCALE* i);
                     break;
                 case 'e':
                     mazeSprites.push_back(*wallSprite2);
-                    mazeSprites.back().setPosition(64 * j, 64 * i);
+                    mazeSprites.back().setPosition(16 * SPRITE_SCALE * j, 16 * SPRITE_SCALE* i);
                     break;
                 case 'r':
                     mazeSprites.push_back(*wallSprite3);
-                    mazeSprites.back().setPosition(64 * j, 64 * i);
+                    mazeSprites.back().setPosition(16 * SPRITE_SCALE * j, 16 * SPRITE_SCALE* i);
                     break;
                 case 't':
                 mazeSprites.push_back(*wallSpriteRed);
-                mazeSprites.back().setPosition(64 * j, 64 * i);
+                mazeSprites.back().setPosition(16 * SPRITE_SCALE * j, 16 * SPRITE_SCALE* i);
                     break;
                 case 'g':
                     mazeSprites.push_back(*groundSprite);
@@ -183,7 +196,7 @@ int main()
         textFPS.setString(std::to_string(llround((1.f / time.asSeconds()))) + "FPS");
 
         world->ClearForces();
-        world->Step(deltaTime, 8, 8);
+        world->Step(1.f / time.asSeconds(), 16, 16);
 
         while (window->pollEvent(event))
         {
@@ -205,7 +218,7 @@ int main()
         }
         spriteBox->setPosition(boxBody->GetPosition().x, boxBody->GetPosition().y);
         player->GetSprite()->setPosition(playerBody->GetPosition().x, playerBody->GetPosition().y);        
-
+        //playerBody->ApplyForce(playerBody->GetMass() * -world->GetGravity(), playerBody->GetWorldCenter(), true);
         
         time = clock.restart();
         deltaTime = time.asMilliseconds();
@@ -221,8 +234,15 @@ int main()
         window->draw(*spriteBox);
 
         window->draw(*player->GetSprite());
+        playerCenter->setPosition(playerBody->GetWorldCenter().x, playerBody->GetWorldCenter().y);
+        playerCollider->setPosition(playerBody->GetWorldCenter().x, playerBody->GetWorldCenter().y);
+        
+        window->draw(*boxCollider);
+        window->draw(*playerCollider);
+        window->draw(*playerCenter);
+
         //window->draw(*groundSprite2);
-        //window->draw(textFPS);
+        window->draw(textFPS);
         window->display();
         if(sf::Joystick::isConnected(0))
         {

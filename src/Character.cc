@@ -2,10 +2,10 @@
 #include<Character.hh>
 #include<box2d/box2d.h>
 
-Character::Character(const char* spriteSheet, Vec2* spriteScale, Vec2* transformScale, Vec2* position, float moveSpeed)
+Character::Character(const char* spriteSheet, Vec2* spriteSize, Vec2* transformScale, Vec2* position, float moveSpeed)
 {
     this->spriteSheet = spriteSheet;
-    this->spriteScale = spriteScale;
+    this->spriteSize = spriteSize;
     this->transformScale = transformScale;
     this->position = position;
     this->moveSpeed = moveSpeed;
@@ -13,15 +13,16 @@ Character::Character(const char* spriteSheet, Vec2* spriteScale, Vec2* transform
     InitSprite();
 }
 
-Character::Character(const char* spriteSheet, Vec2* spriteScale, Vec2* transformScale, Vec2* position, float moveSpeed, uint32_t col, uint32_t row)
+Character::Character(const char* spriteSheet, Vec2* spriteSize, Vec2* transformScale, Vec2* position, float moveSpeed, uint32_t col, uint32_t row, BoxCollider* collider)
 {
     this->spriteSheet = spriteSheet;
-    this->spriteScale = spriteScale;
+    this->spriteSize = spriteSize;
     this->transformScale = transformScale;
     this->position = position;
     this->moveSpeed = moveSpeed;
     this->col = col;
     this->row = row;
+    this->collider = collider;
 
     InitSprite();
 }
@@ -31,14 +32,15 @@ Character::~Character(){}
 void Character::InitSprite()
 {
     texture.loadFromFile(spriteSheet);
-    sprite = new sf::Sprite(texture, sf::IntRect(spriteScale->x *col, spriteScale->y * row, spriteScale->x, spriteScale->y));
+    sprite = new sf::Sprite(texture, sf::IntRect(spriteSize->x *col, spriteSize->y * row, spriteSize->x, spriteSize->y));
     sprite->setScale(transformScale->x, transformScale->y);
     sprite->setPosition(position->x, position->y);
+    collider->SetPosition(position->x, position->y);
 
     animations = new Animation*[2]
     {
-        new Animation(1, 5, 80.f, sprite, spriteScale, 1, 5),
-        new Animation(1, 5, 80.f, sprite, spriteScale, 1, 6)
+        new Animation(1, 5, 80.f, sprite, spriteSize, 1, 5),
+        new Animation(1, 5, 80.f, sprite, spriteSize, 1, 6)
     };
 }
 
@@ -57,22 +59,22 @@ Animation* Character::GetAnimation(unsigned int index) const
     return *(animations + index);
 }
 
-/*void Character::Movement(float& deltaTime, Vec2* axis)
+/*void Character::Movement(float& deltaTime, Vec2* axis, b2Body*& body)
 {
-     
-    sprite->move(sf::Vector2(axis->x, axis->y) * moveSpeed * deltaTime);
-
+    body->SetLinearVelocity(*(new b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed)));
     FlipSprite(axis->x);
 }*/
 
-void Character::Movement(float& deltaTime, Vec2* axis, b2Body*& body)
+void Character::Movement(float& deltaTime, Vec2* axis)
 {
-    //body->SetTransform(body->GetPosition() + *(new b2Vec2(axis->x, axis->y)), 0.f);
-    //body->ApplyForce(b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed), body->GetWorldCenter(), true);
-    body->SetLinearVelocity(*(new b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed)));
-    //std::cout << body->GetLinearVelocity().x << std::endl;
-    //body->ApplyLinearImpulse(b2Vec2(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed), body->GetWorldCenter(), true);
+    collider->Move(axis->x * deltaTime * moveSpeed, axis->y * deltaTime * moveSpeed, sprite);
+    
     FlipSprite(axis->x);
+}
+
+BoxCollider* Character::GetCollider() const
+{
+    return collider;
 }
 
 void Character::FlipSprite(float& axisX)

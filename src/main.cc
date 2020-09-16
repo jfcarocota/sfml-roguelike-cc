@@ -8,7 +8,7 @@
 #define GAME_NAME "Roguelike game"
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-#define MOVE_SPEED 0.0012f
+#define MOVE_SPEED 0.0009f
 #define FPS 120
 #define SPRITE_SCALE 4.f
 
@@ -70,6 +70,10 @@ int main()
     spriteBox->setScale(SPRITE_SCALE, SPRITE_SCALE);
     spriteBox->setPosition(400, 450);
 
+    //Rigidbody for box sprite and world physics
+    b2Vec2* gravity{new b2Vec2(0.f, 0.f)};
+    b2World* world{new b2World(*gravity)};
+
     Character* player
     {
         new Character(
@@ -78,13 +82,9 @@ int main()
         new Vec2(SPRITE_SCALE, SPRITE_SCALE), 
         new Vec2(window->getSize().x / 2.f, window->getSize().y / 2.f),
         MOVE_SPEED,
-        1, 5)
+        1, 5,
+        new BoxCollider(16 * SPRITE_SCALE, 16 * SPRITE_SCALE, new sf::Color(0, 255, 0), 2.f, world))
     };
-
-
-    //Rigidbody for box sprite and world physics
-    b2Vec2* gravity{new b2Vec2(0.f, 0.f)};
-    b2World* world{new b2World(*gravity)};
 
     b2BodyDef boxDef;
     boxDef.type = b2BodyType::b2_staticBody;
@@ -99,28 +99,6 @@ int main()
     boxFixtureDef.friction = 0.3f;
     boxFixtureDef.restitution = 0.f;
     b2Fixture* boxFixture = boxBody->CreateFixture(&boxFixtureDef);
-
-    //Player physics
-    b2BodyDef playerDef;
-    playerDef.type = b2BodyType::b2_dynamicBody;
-    playerDef.position = b2Vec2(player->GetSprite()->getPosition().x, player->GetSprite()->getPosition().y);
-    b2Body* playerBody = world->CreateBody(&playerDef);
-    b2PolygonShape playerPolygonShape;
-    playerPolygonShape.SetAsBox(8 * SPRITE_SCALE, 8 * SPRITE_SCALE);
-    b2FixtureDef playerFixtureDef;
-    playerFixtureDef.shape = &playerPolygonShape;
-    playerFixtureDef.density = 1.f;
-    playerFixtureDef.friction = 0.f;
-    playerFixtureDef.restitution = 0.f;
-    b2Fixture* playerFixture = playerBody->CreateFixture(&playerFixtureDef);
-
-    sf::CircleShape* playerCenter{new sf::CircleShape(2)};
-    playerCenter->setFillColor(sf::Color::Green);
-
-    sf::RectangleShape* playerCollider{new sf::RectangleShape(sf::Vector2f(16 * SPRITE_SCALE, 16 * SPRITE_SCALE))};
-    playerCollider->setFillColor(sf::Color::Transparent);
-    playerCollider->setOutlineColor(sf::Color::Magenta);
-    playerCollider->setOutlineThickness(2.f);
 
     sf::RectangleShape* boxCollider{new sf::RectangleShape(sf::Vector2f(16 * SPRITE_SCALE, 16 * SPRITE_SCALE))};
     boxCollider->setFillColor(sf::Color::Transparent);
@@ -210,21 +188,16 @@ int main()
 
         if(sf::Joystick::isConnected(0))
         {   
-            player->Movement(deltaTime, input.JoystickAxis(), playerBody);
+            player->Movement(deltaTime, input.JoystickAxis());
         }
         else
         {
-            player->Movement(deltaTime, input.KeyboardAxis(), playerBody);
+            player->Movement(deltaTime, input.KeyboardAxis());
         }
-        spriteBox->setPosition(boxBody->GetPosition().x, boxBody->GetPosition().y);
-        player->GetSprite()->setPosition(playerBody->GetPosition().x, playerBody->GetPosition().y);        
-        //playerBody->ApplyForce(playerBody->GetMass() * -world->GetGravity(), playerBody->GetWorldCenter(), true);
         
         time = clock.restart();
         deltaTime = time.asMilliseconds();
         window->clear();
-        //window->draw(*wallSprite);
-        //window->draw(*groundSprite);
 
         for(auto& tile : mazeSprites)
         {
@@ -234,14 +207,8 @@ int main()
         window->draw(*spriteBox);
 
         window->draw(*player->GetSprite());
-        playerCenter->setPosition(playerBody->GetWorldCenter().x, playerBody->GetWorldCenter().y);
-        playerCollider->setPosition(playerBody->GetWorldCenter().x, playerBody->GetWorldCenter().y);
-        
-        window->draw(*boxCollider);
-        window->draw(*playerCollider);
-        window->draw(*playerCenter);
+        window->draw(*player->GetCollider()->GetShape());
 
-        //window->draw(*groundSprite2);
         window->draw(textFPS);
         window->display();
         if(sf::Joystick::isConnected(0))
